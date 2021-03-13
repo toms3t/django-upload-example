@@ -19,19 +19,15 @@ def upload(request):
         uploaded_file = request.FILES['document']
         fs = FileSystemStorage()
         name = fs.save(uploaded_file.name, uploaded_file)
-        print(name)
         context['url'] = fs.url(name)
         with open('/Users/tomset/Documents/python/django-upload-example/media/'+uploaded_file.name, newline='') as csvfile:
             spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
             for row in spamreader:
-                data = ', '.join(row)
+                data = ','.join(row)
+                split_data = data.split(',')
+                model.id, model.title,model.author = split_data[0], split_data[1], split_data[2]
             context['data'] = data
-            model.id = context['data'][0]
-            model.name = context['data'][1]
-            model.author = context['data'][2]
             model.save()
-    # return HttpResponse('test')
-    # return render(request, 'upload.html', context)
     return render(request, 'upload.html', context)
 
 
