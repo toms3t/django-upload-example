@@ -20,11 +20,12 @@ def upload(request):
         name = fs.save(uploaded_file.name, uploaded_file)
         print(name)
         context['url'] = fs.url(name)
-        context['name'] = uploaded_file.name
-        with open('/Users/tomset/Documents/python/django-upload-example/media/Untitled_3LSoG3Z.csv', newline='') as csvfile:
+        with open('/Users/tomset/Documents/python/django-upload-example/media/'+uploaded_file.name, newline='') as csvfile:
             spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
+            # context['data'] = spamreader[2]
             for row in spamreader:
-                print(', '.join(row))
+                data = ', '.join(row)
+            context['data'] = data
     # return HttpResponse('test')
     # return render(request, 'upload.html', context)
     return render(request, 'upload.html', context)
