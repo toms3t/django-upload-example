@@ -13,6 +13,7 @@ class Home(TemplateView):
 
 
 def upload(request):
+    model = Book()
     context = {}
     if request.method == 'POST':
         uploaded_file = request.FILES['document']
@@ -22,10 +23,13 @@ def upload(request):
         context['url'] = fs.url(name)
         with open('/Users/tomset/Documents/python/django-upload-example/media/'+uploaded_file.name, newline='') as csvfile:
             spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
-            # context['data'] = spamreader[2]
             for row in spamreader:
                 data = ', '.join(row)
             context['data'] = data
+            model.id = context['data'][0]
+            model.name = context['data'][1]
+            model.author = context['data'][2]
+            model.save()
     # return HttpResponse('test')
     # return render(request, 'upload.html', context)
     return render(request, 'upload.html', context)
