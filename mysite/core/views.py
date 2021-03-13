@@ -1,10 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from django.views.generic import TemplateView, ListView, CreateView
 from django.core.files.storage import FileSystemStorage
 from django.urls import reverse_lazy
 
 from .forms import BookForm
 from .models import Book
+import csv
 
 
 class Home(TemplateView):
@@ -17,8 +18,17 @@ def upload(request):
         uploaded_file = request.FILES['document']
         fs = FileSystemStorage()
         name = fs.save(uploaded_file.name, uploaded_file)
+        print(name)
         context['url'] = fs.url(name)
+        context['name'] = uploaded_file.name
+        with open('/Users/tomset/Documents/python/django-upload-example/media/Untitled_3LSoG3Z.csv', newline='') as csvfile:
+            spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
+            for row in spamreader:
+                print(', '.join(row))
+    # return HttpResponse('test')
+    # return render(request, 'upload.html', context)
     return render(request, 'upload.html', context)
+
 
 
 def book_list(request):
